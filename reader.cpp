@@ -14,20 +14,18 @@ struct Point {
     long long lat, lon;
 };
 
-void parse(string* line_info, string line) {
-	char* token = strtok(line_info, " ");
-
-	int counter = 0;
-	while (token != NULL) {
-		if ((counter == 0) || (counter == 2)) {
-			token = strtok(NULL, " ");
-			line_info[counter] = token;
-		}
-		if ((counter == 1) || (counter == 3)) {
-			token = strtok(NULL, "\n");
-			line_info[counter] = token;
-		}
-	}
+void parse(string* line_info, string line, string delimiter = ",") {
+  int start = 0;
+  int end = line.find(delimiter);
+  int i = 0;
+  
+  while (end != -1) {
+      line_info[i] = line.substr(start, end - start);
+      start = end + delimiter.size();
+      end = line.find(delimiter, start);
+      i++;
+  }
+  line_info[3] = line.substr(start, end - start);
 }
 
 int open_fifo(const char* pipeName, int mode) {
